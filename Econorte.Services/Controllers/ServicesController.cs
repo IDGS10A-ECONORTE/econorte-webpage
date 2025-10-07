@@ -11,19 +11,22 @@ namespace Econorte.Services.Controllers
     {
         private readonly ILogger<ServicesController> _logger;
         private readonly LoginServices _loginServices;
+        private readonly Econorte_DevContext _db;
 
         public ServicesController(
             ILogger<ServicesController> logger,
-            LoginServices loginServices
+            LoginServices loginServices,
+            Econorte_DevContext db
             )
         {
             _logger = logger;
             _loginServices = loginServices;
+            _db = db;
         }
 
         //Servicios de LoginServices---------------------------------------------------------------------------------------------------------------
         //Validar las credenciales del usuario
-        [HttpPost(Name = "Login")]
+        [HttpPost("Login")]
         public object Login([FromBody] Credentials credentials)
         {
             //Llama al método del servicio UserServices que actualiza los datos de un usuario existente
@@ -32,7 +35,7 @@ namespace Econorte.Services.Controllers
         }
 
         //Cerrar Sesión
-        [HttpPost(Name = "Logout")]
+        [HttpPost("Logout")]
         public object Logout([FromBody] Credentials credentials)
         {
             //Llama al método del servicio UserServices que actualiza los datos de un usuario existente
@@ -40,7 +43,7 @@ namespace Econorte.Services.Controllers
             return response;
         }
 
-        [HttpPost(Name = "Register")]
+        [HttpPost("Register")]
         public object Register([FromBody] Users user)
         {
             //Llama al método del servicio UserServices que actualiza los datos de un usuario existente
@@ -49,7 +52,7 @@ namespace Econorte.Services.Controllers
         }
 
         //Llama al método del servicio LoginServices que cierra todas las sesiones activas
-        [HttpPost(Name = "CloseSessions")]
+        [HttpPost("CloseSessions")]
         public void CloseSessions()
         {
             _loginServices.CloseSessions();

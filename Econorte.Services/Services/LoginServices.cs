@@ -23,7 +23,6 @@ namespace Econorte.Services.Services
             {
                 //Busca al usuario en la base de datos
                 var row = _db.Users
-                    .Include(r => r.fk_RoleNavigation)
                     .Where(u => u.Email == credentials.email && u.Active)
                     .FirstOrDefault();
 

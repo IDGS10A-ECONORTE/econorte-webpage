@@ -6,7 +6,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddScoped<LoginServices>(); 
+builder.Services.AddScoped<LoginServices>();
+Console.WriteLine($"ASPNETCORE_ENVIRONMENT: {builder.Environment.EnvironmentName}");
+
 builder.Services.AddDbContext<Econorte_DevContext>(options => 
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
