@@ -1,0 +1,17 @@
+[
+  {
+    "Name": "Web&Services",
+    "Projects": [
+      {
+        "Path": "Econorte.WebSite\\Econorte.WebSite.csproj",
+        "Action": "Start",
+        "DebugTarget": "Container (Dockerfile)"
+      },
+      {
+        "Path": "Econorte.Services\\Econorte.Services.csproj",
+        "Action": "Start",
+        "DebugTarget": "Container (Dockerfile)"
+      }
+    ]
+  }
+]
