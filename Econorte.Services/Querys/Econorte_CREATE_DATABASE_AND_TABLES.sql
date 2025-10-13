@@ -63,15 +63,15 @@ INSERT INTO Users VALUES
 
 --APIs
 INSERT INTO APIs VALUES 
-('Login','https://localhost:32777/Services/Login','/Services/Login',0,1),
-('Logout','https://localhost:32777/Services/Logout','/Services/Logout',0,1),
-('Register','https://localhost:32777/Services/Register','/Services/Register',0,1);
+('Login','https://localhost:32775/Services/Login','/Services/Login',0,1),
+('Logout','https://localhost:32775/Services/Logout','/Services/Logout',0,1),
+('Register','https://localhost:32775/Services/Register','/Services/Register',0,1);
 
 --Actualizar Endpoints para cuando esté en Prod
 UPDATE APIs SET URL_Prod = CASE
-	WHEN URL_Prod = '/Services/Login' THEN '' 
-	WHEN URL_Prod = '/Services/Logout' THEN ''
-	WHEN URL_Prod = '/Services/Register' THEN ''
+	WHEN URL_Prod = '/Services/Login' THEN '-' 
+	WHEN URL_Prod = '/Services/Logout' THEN '-'
+	WHEN URL_Prod = '/Services/Register' THEN '-'
 	ELSE URL_Prod
 	END
 	WHERE URL_Dev IN(

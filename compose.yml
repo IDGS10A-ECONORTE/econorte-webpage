@@ -1,0 +1,25 @@
+version: "3.9"
+services:
+  econorteservices:
+    build:
+      context: ./Econorte.Services
+      dockerfile: Dockerfile
+    ports:
+      - "32771:8080"
+    networks:
+      - econortenet
+
+  econortewebsite:
+    build:
+      context: ./Econorte.WebSite
+      dockerfile: Dockerfile
+    ports:
+      - "32773:8080"
+    depends_on:
+      - econorteservices
+    networks:
+      - econortenet
+
+networks:
+  econortenet:
+    external: true

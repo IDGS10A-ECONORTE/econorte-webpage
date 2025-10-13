@@ -102,7 +102,7 @@ namespace Econorte.WebSite.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { error = ex.Message } );
+                return BadRequest(ex.Message);
             }
         }
     }

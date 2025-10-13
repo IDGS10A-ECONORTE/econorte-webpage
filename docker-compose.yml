@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  econorte.services:
+    image: econorte.services:dev
+    build:
+      context: .
+      dockerfile: Econorte.Services/Dockerfile
+    ports:
+      - "32771:8080"
+      - "32772:8081"
+    networks:
+      - econorte.net 
+    # environment:
+    #   - ASPNETCORE_URLS=http://+:8080;http://+:8081
+
+  econorte.website:
+    image: econorte.website:dev
+    build:
+      context: .
+      dockerfile: Econorte.WebSite/Dockerfile
+    ports:
+      - "32769:8080"
+      - "32770:8081"
+    depends_on:
+      - econorte.services
+    networks:
+      - econorte.net 
+    # environment:
+    #   - ASPNETCORE_URLS=http://+:8080;http://+:8081
+
+networks:
+  econorte.net:
+    external: true

@@ -11,12 +11,12 @@ namespace Econorte.Services.Controllers
     {
         private readonly ILogger<ServicesController> _logger;
         private readonly LoginServices _loginServices;
-        private readonly Econorte_DevContext _db;
+        private readonly Econorte_Context _db;
 
         public ServicesController(
             ILogger<ServicesController> logger,
             LoginServices loginServices,
-            Econorte_DevContext db
+            Econorte_Context db
             )
         {
             _logger = logger;

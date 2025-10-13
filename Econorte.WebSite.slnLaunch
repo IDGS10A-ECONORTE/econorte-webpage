@@ -5,12 +5,12 @@
       {
         "Path": "Econorte.WebSite\\Econorte.WebSite.csproj",
         "Action": "Start",
-        "DebugTarget": "Container (Dockerfile)"
+        "DebugTarget": "https"
       },
       {
         "Path": "Econorte.Services\\Econorte.Services.csproj",
         "Action": "Start",
-        "DebugTarget": "Container (Dockerfile)"
+        "DebugTarget": "https"
       }
     ]
   }

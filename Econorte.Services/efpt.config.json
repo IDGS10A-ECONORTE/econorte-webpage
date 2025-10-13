@@ -1,6 +1,6 @@
 ﻿{
    "CodeGenerationMode": 5,
-   "ContextClassName": "Econorte_DevContext",
+   "ContextClassName": "Econorte_Context",
    "ContextNamespace": null,
    "FilterSchemas": false,
    "IncludeConnectionString": false,

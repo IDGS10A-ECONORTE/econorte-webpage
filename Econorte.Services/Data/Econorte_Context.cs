@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Econorte.Services.Data;
 
-public partial class Econorte_DevContext : DbContext
+public partial class Econorte_Context : DbContext
 {
-    public Econorte_DevContext(DbContextOptions<Econorte_DevContext> options)
+    public Econorte_Context(DbContextOptions<Econorte_Context> options)
         : base(options)
     {
     }

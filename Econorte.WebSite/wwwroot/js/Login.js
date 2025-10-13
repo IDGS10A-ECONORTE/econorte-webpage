@@ -26,28 +26,26 @@
         isLogin = !isLogin;
         loginSection.style.display = isLogin ? "block" : "none";
         registerSection.style.display = isLogin ? "none" : "block";
-        toggleButtons(); // 🔹 actualiza el estado de botones al cambiar
+        toggleButtons(); // actualiza estado de botones
     }
 
     switchToRegister.addEventListener("click", e => {
         e.preventDefault();
-        toggleForm();
+        if (isLogin) toggleForm();
     });
 
     switchToLogin.addEventListener("click", e => {
         e.preventDefault();
-        toggleForm();
+        if (!isLogin) toggleForm();
     });
 
     // -------- Validación general --------
     function toggleButtons() {
         if (isLogin) {
-            // Validación del LOGIN
             const emailFilled = loginEmail.value.trim().length > 0;
             const passwordFilled = loginPassword.value.trim().length > 0;
             btnLogin.disabled = !(emailFilled && passwordFilled);
         } else {
-            // Validación del REGISTRO
             const allFieldsFilled =
                 registerName.value.trim().length > 0 &&
                 registerEmail.value.trim().length > 0 &&
@@ -72,27 +70,10 @@
     // Estado inicial
     toggleButtons();
 
-    // Alternar entre login y registro
-    function toggleForm() {
-        isLogin = !isLogin;
-        loginSection.style.display = isLogin ? "block" : "none";
-        registerSection.style.display = isLogin ? "none" : "block";
-    }
-
-    switchToRegister.addEventListener("click", (e) => {
-        e.preventDefault();
-        toggleForm();
-    });
-
-    switchToLogin.addEventListener("click", (e) => {
-        e.preventDefault();
-        toggleForm();
-    });
-
     // ----------- LOGIN -----------
-    document.getElementById("btnLogin").addEventListener("click", async () => {
-        const email = document.getElementById("loginEmail").value.trim();
-        const password = document.getElementById("loginPassword").value.trim();
+    btnLogin.addEventListener("click", async () => {
+        const email = loginEmail.value.trim();
+        const password = loginPassword.value.trim();
 
         if (!email || !password) {
             alert("Por favor completa ambos campos.");
@@ -102,18 +83,20 @@
         try {
             const config = {
                 IdApi: 1,
-                BodyParams: JSON.stringify({ Email: email, Password: password })
+                BodyParams: {
+                    Email: email,
+                    Password: password
+                }
             };
 
-            const response = await axios.post(callApiAsync, config);
-
+            const response = await axios.post("http://econorte.services:8081/Services/Login", config.BodyParams);
+            //const response = await axios.post("http://econorte.services:8081/Services/Login", config);
             const result = response.data;
 
             if (result && result.id_User && result.id_User !== 0) {
                 console.log("Inicio de sesión exitoso");
-                window.location.href = `${index}`;
+                window.location.href = "/index.html";
             } else {
-                console.log("Credenciales incorrectas");
                 alert("Credenciales incorrectas. Intenta de nuevo.");
             }
         } catch (error) {
@@ -123,12 +106,12 @@
     });
 
     // ----------- REGISTRO -----------
-    document.getElementById("btnRegister").addEventListener("click", async () => {
-        const name = document.getElementById("registerName").value.trim();
-        const email = document.getElementById("registerEmail").value.trim();
-        const phone = document.getElementById("registerPhone").value.trim();
-        const password = document.getElementById("registerPassword").value.trim();
-        const confirmPassword = document.getElementById("registerConfirmPassword").value.trim();
+    btnRegister.addEventListener("click", async () => {
+        const name = registerName.value.trim();
+        const email = registerEmail.value.trim();
+        const phone = registerPhone.value.trim();
+        const password = registerPassword.value.trim();
+        const confirmPassword = registerConfirmPassword.value.trim();
 
         if (!name || !email || !phone || !password || !confirmPassword) {
             alert("Por favor completa todos los campos.");
@@ -143,21 +126,21 @@
         try {
             const config = {
                 IdApi: 3,
-                BodyParams: JSON.stringify({
+                BodyParams: {
                     Name: name,
                     Email: email,
                     Phone: phone,
                     Password: password
-                })
+                }
             };
 
-            const response = await axios.post(callApiAsync, config);
+            const response = await axios.post("http://econorte.services:8080/Services/Register", config);
             const result = response.data;
 
             if (result && result.Success) {
                 alert("Registro exitoso. Ahora puedes iniciar sesión.");
-                toggleForm();
-                document.querySelector("#registerSection form").reset();
+                toggleForm(); // vuelve al login
+                document.querySelector("#registerSection form")?.reset();
             } else {
                 alert(result?.Message || "Error en el registro.");
             }
