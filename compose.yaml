@@ -1,0 +1,38 @@
+services:
+  econorte.services:
+    image: econorte.services:dev
+    build:
+      context: .
+      dockerfile: Econorte.Services/Dockerfile
+    ports:
+      - "32771:8080"
+      - "32772:8081"
+    volumes:
+      - ./Econorte.Services/:/app
+  econorte.website:
+    image: econorte.website:dev
+    build:
+      context: .
+      dockerfile: Econorte.WebSite/Dockerfile
+    ports:
+      - "32769:8080"
+      - "32770:8081"
+    volumes:
+      - ./Econorte.Website/:/app
+    depends_on:
+      - econorte.services
+  ms-express:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: always
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=cassioedifice2025
+      - MSSQL_PID=Express
+    ports:
+      - "1435:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql
+      - ./database-users.sql:/database-users.sql
+
+volumes:
+  mssql-data:
