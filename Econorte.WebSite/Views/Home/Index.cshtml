@@ -2,11 +2,51 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Welcome to our application!</p>
-</div>
+<!-- Contenido principal -->
+<div class="container my-4">
+    <div class="text-center mb-4">
+        <h3 class="fw-bold text-success">Panel de Sensores</h3>
+        <p class="text-muted">Visualiza los sensores IoT asociados a tu cuenta y su información en tiempo real.</p>
+    </div>
 
+    <!-- Información general del usuario -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title fw-bold">Resumen</h5>
+            <p class="mb-1">Total de sensores asignados: <span id="sensorCount" class="fw-semibold">0</span></p>
+            <p class="mb-0">Última actualización: <span id="lastUpdate">--/--/----</span></p>
+        </div>
+    </div>
+
+    <!-- Tabla de sensores -->
+    <div class="card">
+        <div class="card-header bg-success text-white fw-bold">
+            Sensores IoT asociados
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover mb-0" id="sensorsTable">
+                    <thead class="table-success">
+                        <tr>
+                            <th>ID Sensor</th>
+                            <th>Ubicación</th>
+                            <th>Temperatura (°C)</th>
+                            <th>Humedad (%)</th>
+                            <th>Gas/Humo</th>
+                            <th>Última lectura</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-3">Cargando datos...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts {
     <script src="~/js/Index.js"></script>
 }

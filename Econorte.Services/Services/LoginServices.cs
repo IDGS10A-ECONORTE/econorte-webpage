@@ -82,7 +82,7 @@ namespace Econorte.Services.Services
         public Response CreateUser(Users user)
         {
 
-            Response response = new Response();
+            Response response = new();
 
             //Por defecto esta propiedad será False
             response.Success = false;
@@ -108,7 +108,7 @@ namespace Econorte.Services.Services
                         Email = user.Email,
                         Password = user.Password,
                         Phone = user.Phone,
-                        fk_Role = user.fk_Role,
+                        fk_Role = 2,
                         Active = true,
                     };
 

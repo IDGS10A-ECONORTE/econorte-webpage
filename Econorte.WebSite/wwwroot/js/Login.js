@@ -89,13 +89,12 @@
                 }
             };
 
-            const response = await axios.post("http://econorte.services:8081/Services/Login", config.BodyParams);
-            //const response = await axios.post("http://econorte.services:8081/Services/Login", config);
+            const response = await axios.post(callApiAsync, config);
             const result = response.data;
 
-            if (result && result.id_User && result.id_User !== 0) {
+            if (result && result.Id_User && result.Id_User !== 0) {
                 console.log("Inicio de sesión exitoso");
-                window.location.href = "/index.html";
+                window.location.href = index;
             } else {
                 alert("Credenciales incorrectas. Intenta de nuevo.");
             }
@@ -134,7 +133,7 @@
                 }
             };
 
-            const response = await axios.post("http://econorte.services:8080/Services/Register", config);
+            const response = await axios.post(callApiAsync, config);
             const result = response.data;
 
             if (result && result.Success) {

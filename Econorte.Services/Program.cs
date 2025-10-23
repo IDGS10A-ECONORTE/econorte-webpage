@@ -12,6 +12,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
 builder.Services.AddScoped<LoginServices>();
+builder.Services.AddScoped<SensorsServices>();
 builder.Services.AddDbContext<Econorte_Context>(options => 
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

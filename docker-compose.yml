@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   econorte.services:
     image: econorte.services:dev
@@ -9,11 +7,8 @@ services:
     ports:
       - "32771:8080"
       - "32772:8081"
-    networks:
-      - econorte.net 
-    # environment:
-    #   - ASPNETCORE_URLS=http://+:8080;http://+:8081
-
+    volumes:
+      - ./Econorte.Services/:/app/Econorte.Services
   econorte.website:
     image: econorte.website:dev
     build:
@@ -22,13 +17,22 @@ services:
     ports:
       - "32769:8080"
       - "32770:8081"
+    volumes:
+      - ./Econorte.Website/:/app/Econorte.Website
     depends_on:
       - econorte.services
-    networks:
-      - econorte.net 
-    # environment:
-    #   - ASPNETCORE_URLS=http://+:8080;http://+:8081
+  sqlexpress:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: econorte.sqlexpress
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password123!
+      - MSSQL_PID=Express
+    ports:
+      - "32773:1433"
+    volumes:
+      - econorte-sql:/var/opt/mssql
+    restart: always
 
-networks:
-  econorte.net:
-    external: true
+volumes:
+  econorte-sql:
