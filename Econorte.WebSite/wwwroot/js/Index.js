@@ -19,6 +19,8 @@
     }
     */
 
+    //const response = await axios.get('https://localhost:7168/Services/GetSensors/1');
+
     // Datos simulados mientras no hay backend
     const sensores = [
         { id: "SEN-001", ubicacion: "Bosque El Águila", temperatura: 34.2, humedad: 45, gas: "Normal", ultimaLectura: "2025-10-16 14:32", estado: "Activo" },
