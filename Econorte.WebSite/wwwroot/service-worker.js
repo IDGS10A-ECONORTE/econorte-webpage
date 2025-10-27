@@ -1,6 +1,8 @@
 const CACHE_NAME = 'econorte-appshell-v1';
 const APP_SHELL = [
   '/',
+  '/Home/Login',
+  '/Home/Index',
   '/css/site.css',
   '/js/site.js',
   '/favicon.ico',
