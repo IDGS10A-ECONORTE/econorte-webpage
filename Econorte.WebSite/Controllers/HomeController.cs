@@ -86,7 +86,11 @@ namespace Econorte.WebSite.Controllers
                     using var client = new HttpClient();
                     using var request = new HttpRequestMessage(api.IsGet ? HttpMethod.Get : HttpMethod.Post, api.Param != "" ? (api.URL + api.Param) : api.URL);
 
-                    if (api.IsPost && api.BodyParams != null)
+                    if (api.fk_Method == 2 || 
+                        api.fk_Method == 4 ||
+                        api.fk_Method == 5
+                        && api.BodyParams != null
+                        )
                     {
                         var json = JsonSerializer.Serialize(api.BodyParams);
                         request.Content = new StringContent(json, Encoding.UTF8, "application/json");
