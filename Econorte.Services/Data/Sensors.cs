@@ -11,23 +11,9 @@ public partial class Sensors
 
     public string Name { get; set; }
 
-    public DateTime? Date { get; set; }
-
-    public double? Temperature { get; set; }
-
-    public double? Humidity { get; set; }
-
-    public int? Gas_Level { get; set; }
-
-    public int? Vibration { get; set; }
-
-    public bool? Earthquake_Status { get; set; }
-
-    public bool? Fire_Status { get; set; }
-
-    public byte? Alarm_Intensity { get; set; }
-
     public int fk_User { get; set; }
+
+    public virtual ICollection<SensorsParameters> SensorsParameters { get; set; } = new List<SensorsParameters>();
 
     public virtual Users fk_UserNavigation { get; set; }
 }

@@ -17,6 +17,8 @@ public partial class Econorte_Context : DbContext
 
     public virtual DbSet<Sensors> Sensors { get; set; }
 
+    public virtual DbSet<SensorsParameters> SensorsParameters { get; set; }
+
     public virtual DbSet<Users> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,9 +37,6 @@ public partial class Econorte_Context : DbContext
         {
             entity.HasKey(e => e.Id_Sensor);
 
-            entity.Property(e => e.Date)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
             entity.Property(e => e.Name)
                 .IsRequired()
                 .HasMaxLength(50)
@@ -47,6 +46,20 @@ public partial class Econorte_Context : DbContext
                 .HasForeignKey(d => d.fk_User)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_SENSORS_USERS");
+        });
+
+        modelBuilder.Entity<SensorsParameters>(entity =>
+        {
+            entity.HasKey(e => e.Id_Parameters).HasName("PK_SENSORSPARAMETERS");
+
+            entity.Property(e => e.Date)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.fk_SensorNavigation).WithMany(p => p.SensorsParameters)
+                .HasForeignKey(d => d.fk_Sensor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PARAMETERS_SENSORS");
         });
 
         modelBuilder.Entity<Users>(entity =>

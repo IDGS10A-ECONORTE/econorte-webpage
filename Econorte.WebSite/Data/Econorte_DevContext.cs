@@ -15,6 +15,8 @@ public partial class Econorte_DevContext : DbContext
 
     public virtual DbSet<APIs> APIs { get; set; }
 
+    public virtual DbSet<Methods> Methods { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<APIs>(entity =>
@@ -30,9 +32,24 @@ public partial class Econorte_DevContext : DbContext
             entity.Property(e => e.URL_Prod)
                 .IsRequired()
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.fk_MethodNavigation).WithMany(p => p.APIs)
+                .HasForeignKey(d => d.fk_Method)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_METHODS_APIS");
+        });
+
+        modelBuilder.Entity<Methods>(entity =>
+        {
+            entity.HasKey(e => e.Id_Method).HasName("PK_METHODS");
+
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .IsUnicode(false);
         });
 
         OnModelCreatingPartial(modelBuilder);
     }
+
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

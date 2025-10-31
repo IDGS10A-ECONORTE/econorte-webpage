@@ -13,6 +13,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 builder.Services.AddScoped<LoginServices>();
 builder.Services.AddScoped<SensorsServices>();
+builder.Services.AddScoped<SensorsParametersServices>();
 builder.Services.AddDbContext<Econorte_Context>(options => 
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 

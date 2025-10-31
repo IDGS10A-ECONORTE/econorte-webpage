@@ -12,18 +12,21 @@ namespace Econorte.Services.Controllers
         private readonly ILogger<ServicesController> _logger;
         private readonly LoginServices _loginServices;
         private readonly SensorsServices _sensorsServices;
+        private readonly SensorsParametersServices _sensorsParametersServices;
         private readonly Econorte_Context _db;
 
         public ServicesController(
             ILogger<ServicesController> logger,
             LoginServices loginServices,
             SensorsServices sensorsServices,
+            SensorsParametersServices sensorsParametersServices,
             Econorte_Context db
             )
         {
             _logger = logger;
             _loginServices = loginServices;
             _sensorsServices = sensorsServices;
+            _sensorsParametersServices = sensorsParametersServices;
             _db = db;
         }
 
@@ -62,7 +65,6 @@ namespace Econorte.Services.Controllers
         }
 
         //Servicios de SensorsServices---------------------------------------------------------------------------------------------------------------
-
         //Registrar un nuevo sensor
         [HttpPost("RegisterSensor")]
         public object RegisterSensor([FromBody] Sensors sensor)
@@ -96,6 +98,15 @@ namespace Econorte.Services.Controllers
         {
             //Llama al método del servicio SensorsServices que actualiza los datos de un sensor
             Response response = _sensorsServices.Update(sensor);
+            return response;
+        }
+
+        //Servicios de SensorsParametersServices---------------------------------------------------------------------------------------------------------------
+        [HttpPost("AddSensorParameter")]
+        public object AddSensorParameter([FromBody] Parameters sensorParameter)
+        {
+            //Llama al método del servicio SensorsParametersServices que registra un nuevo parámetro para un sensor
+            Response response = _sensorsParametersServices.Add(sensorParameter);
             return response;
         }
     }

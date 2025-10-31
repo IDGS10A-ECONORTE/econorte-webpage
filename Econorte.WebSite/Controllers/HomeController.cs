@@ -57,10 +57,9 @@ namespace Econorte.WebSite.Controllers
                         Id_API = a.Id_API,
                         Name = a.Name,
                         URL = !_env.IsDevelopment() ? a.URL_Prod : a.URL_Dev,
-                        IsGet = a.IsGet,
-                        IsPost = a.IsPost,
-                        Param = a.IsGet ? (config.Param != null ? config.Param : "") : "",
-                        BodyParams = a.IsPost ? config.BodyParams : null,
+                        fk_Method = a.fk_Method,
+                        Param = a.fk_Method == 2 ? (config.Param != null ? config.Param : "") : "",
+                        BodyParams = a.fk_Method == 2 ? config.BodyParams : null,
                     })
                     .FirstOrDefault();
             }
@@ -84,7 +83,7 @@ namespace Econorte.WebSite.Controllers
                 if (api != null)
                 {
                     using var client = new HttpClient();
-                    using var request = new HttpRequestMessage(api.IsGet ? HttpMethod.Get : HttpMethod.Post, api.Param != "" ? (api.URL + api.Param) : api.URL);
+                    using var request = new HttpRequestMessage(GetMethod(api.fk_Method), api.Param != "" ? (api.URL + api.Param) : api.URL);
 
                     if (api.fk_Method == 2 || 
                         api.fk_Method == 4 ||
@@ -114,5 +113,16 @@ namespace Econorte.WebSite.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        private static HttpMethod GetMethod(int Id) =>
+            Id switch
+            {
+                1 => HttpMethod.Get,
+                2 => HttpMethod.Post,
+                3 => HttpMethod.Delete,
+                4 => HttpMethod.Put,
+                5 => HttpMethod.Patch,
+                _ => throw new ArgumentOutOfRangeException(nameof(Id), "Invalid method ID"),
+            };
     }
 }

@@ -23,29 +23,39 @@ CREATE TABLE Users
 	LastLog DATE NULL
 );
 
+--Métodods
+CREATE TABLE Methods(
+	Id_Method INT IDENTITY NOT NULL CONSTRAINT PK_METHODS PRIMARY KEY,
+	[Name] VARCHAR(MAX) NOT NULL,
+);
+
 --APIs
 CREATE TABLE APIs (
 	Id_API INT IDENTITY NOT NULL CONSTRAINT PK_APIs PRIMARY KEY,
 	[Name] VARCHAR(MAX) NOT NULL,
 	[URL_Dev] VARCHAR(MAX) NOT NULL,
 	[URL_Prod] VARCHAR(MAX) NOT NULL,
-	IsGet BIT NOT NULL DEFAULT 0,
-	IsPost BIT NOT NULL DEFAULT 0,
+	fk_Method INT NOT NULL CONSTRAINT FK_METHODS_APIS FOREIGN KEY REFERENCES Methods(Id_Method),
 );
 
 --Sensors
 CREATE TABLE Sensors (
 	Id_Sensor INT IDENTITY NOT NULL CONSTRAINT PK_Sensors PRIMARY KEY,
     [Name] VARCHAR(50) NOT NULL,
-    [Date] DATETIME DEFAULT GETDATE(),
 	fk_User INT NOT NULL CONSTRAINT FK_SENSORS_USERS FOREIGN KEY REFERENCES Users(Id_User),
+);
+
+--SensorsParameters
+CREATE TABLE SensorsParameters (
+	Id_Parameters INT IDENTITY NOT NULL CONSTRAINT PK_SENSORSPARAMETERS PRIMARY KEY,
+	fk_Sensor INT NOT NULL CONSTRAINT FK_PARAMETERS_SENSORS FOREIGN KEY REFERENCES Sensors(Id_Sensor),
+	[Date] DATETIME DEFAULT GETDATE(),
     Temperature FLOAT,
     Humidity FLOAT,
     Gas_Level INT,
     Vibration INT,
     Earthquake_Status BIT,
     Fire_Status BIT,
-    Alarm_Intensity TINYINT
 );
 
 --Roles
@@ -61,11 +71,25 @@ INSERT INTO Users VALUES
 ('SANTIAGO GALLINDO, SAULO','19401@virtual.utsc.edu.mx','19401',NULL,1,1,0,NULL),
 ('GUZMAN PEREZ, JORDAN YAREL','14236@virtual.utsc.edu.mx','14236',NULL,1,1,0,NULL);
 
+SELECT * FROM Methods;
+--Methods
+INSERT INTO Methods VALUES
+('Get'),
+('Post'),
+('Delete'),
+('Put'),
+('Patch');
+
 --APIs
 INSERT INTO APIs VALUES 
-('Login','https://localhost:32775/Services/Login','/Services/Login',0,1),
-('Logout','https://localhost:32775/Services/Logout','/Services/Logout',0,1),
-('Register','https://localhost:32775/Services/Register','/Services/Register',0,1);
+('Login','https://localhost:7168/Services/Login','/Services/Login',2),
+('Logout','https://localhost:7168/Services/Logout','/Services/Logout',2),
+('Register','https://localhost:7168/Services/Register','/Services/Register',2),
+('Register','https://localhost:7168/Services/CloseSessions','/Services/CloseSessions',2),
+('Register','https://localhost:7168/Services/RegisterSensor','/Services/RegisterSensor',2),
+('Register','https://localhost:7168/Services/GetSensors/','/Services/GetSensors/',1),
+('Register','https://localhost:7168/Services/DeleteSensor/','/Services/DeleteSensor/',3),
+('Register','https://localhost:7168/Services/UpdateSensor','/Services/UpdateSensor',4);
 
 --Actualizar Endpoints para cuando esté en Prod
 UPDATE APIs SET URL_Prod = CASE

@@ -17,6 +17,10 @@
       {
          "Name": "[dbo].[APIs]",
          "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Methods]",
+         "ObjectType": 0
       }
    ],
    "UiHint": null,

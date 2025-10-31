@@ -1,5 +1,6 @@
 ﻿using Econorte.Services.Data;
 using Econorte.Services.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Econorte.Services.Services
 {
@@ -22,8 +23,8 @@ namespace Econorte.Services.Services
                 {
                     //Agrega el nuevo sensor a la base de datos
                     _db.Sensors.Add(sensor);
-                    //Guarda los cambios en la base de datos
                     _db.SaveChanges();
+
                     //Respuesta para el cliente y manejo de alertas
                     response.Success = true;
                     response.Message = "Sensor registrado correctamente";
@@ -43,20 +44,64 @@ namespace Econorte.Services.Services
         }
 
         //Método que obtiene todos los sensores de un usuario
-        public List<Sensors> Get(int Id)
+        public object Get(int Id)
         {
-            List<Sensors> sensors = new();
+            var sensors = new List<Sensor>();
             try
             {
                 //Obtiene todos los sensores del usuario
                 sensors = _db.Sensors
                     .Where(s => s.fk_User == Id)
+                    .Select(s => new Sensor
+                    {
+                        Id_Sensor = s.Id_Sensor,
+                        Name = s.Name,
+                    })
                     .ToList();
+
+                foreach (var sensor in sensors)
+                {
+                    //Obtiene el último parámetro del sensor
+                    var lastParameters = _db.SensorsParameters
+                        .Where(sp => sp.fk_Sensor == sensor.Id_Sensor)
+                        .OrderByDescending(sp => sp.Date)
+                        .FirstOrDefault();
+                    if (lastParameters != null)
+                    {
+                        sensor.LastParameters = new Parameters
+                        {
+                            Id_Sensor = lastParameters.fk_Sensor,
+                            Date = lastParameters.Date ?? new(),
+                            Temperature = lastParameters.Temperature ?? new(),
+                            Humidity = lastParameters.Humidity ?? new(),
+                            Gas_Level = lastParameters.Gas_Level ?? new(),
+                            Vibration = lastParameters.Vibration ?? new(),
+                            Earthquake_Status = lastParameters.Earthquake_Status ?? new(),
+                            Fire_Status = lastParameters.Fire_Status ?? new(),
+                        };
+                    }
+                    //Obtiene todos los parámetros del sensor
+                    var parameters = _db.SensorsParameters
+                        .Where(sp => sp.fk_Sensor == sensor.Id_Sensor)
+                        .Select(sp => new Parameters
+                        {
+                            Id_Sensor = sp.fk_Sensor,
+                            Date = sp.Date ?? new(),
+                            Temperature = sp.Temperature ?? new(),
+                            Humidity = sp.Humidity ?? new(),
+                            Gas_Level = sp.Gas_Level ?? new(),
+                            Vibration = sp.Vibration ?? new(),
+                            Earthquake_Status = sp.Earthquake_Status ?? new(),
+                            Fire_Status = sp.Fire_Status ?? new(),
+                        })
+                        .ToList();
+                    sensor.LogParameters = parameters;
+                }
             }
             catch (Exception)
             {
                 //En caso de error, devuelve una lista vacía
-                sensors = new List<Sensors>();
+                sensors = new List<Sensor>();
             }
             return sensors;
         }
@@ -76,8 +121,8 @@ namespace Econorte.Services.Services
                 {
                     //Elimina el sensor de la base de datos
                     _db.Sensors.Remove(sensor);
-                    //Guarda los cambios en la base de datos
                     _db.SaveChanges();
+
                     //Respuesta para el cliente y manejo de alertas
                     response.Success = true;
                     response.Message = "Sensor eliminado correctamente";
@@ -111,13 +156,6 @@ namespace Econorte.Services.Services
                 {
                     //Actualiza los datos del sensor
                     existingSensor.Name = sensor.Name;
-                    existingSensor.Temperature = sensor.Temperature;
-                    existingSensor.Humidity = sensor.Humidity;
-                    existingSensor.Gas_Level = sensor.Gas_Level;
-                    existingSensor.Vibration = sensor.Vibration;
-                    existingSensor.Earthquake_Status = sensor.Earthquake_Status;
-                    existingSensor.Fire_Status = sensor.Fire_Status;
-                    existingSensor.Alarm_Intensity = sensor.Alarm_Intensity;
                     //Guarda los cambios en la base de datos
                     _db.SaveChanges();
                     //Respuesta para el cliente y manejo de alertas

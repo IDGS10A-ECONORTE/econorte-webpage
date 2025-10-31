@@ -15,7 +15,7 @@ public partial class APIs
 
     public string URL_Prod { get; set; }
 
-    public bool IsGet { get; set; }
+    public int fk_Method { get; set; }
 
-    public bool IsPost { get; set; }
+    public virtual Methods fk_MethodNavigation { get; set; }
 }
