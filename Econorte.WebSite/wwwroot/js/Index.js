@@ -3,64 +3,235 @@
     const sensorCount = document.getElementById("sensorCount");
     const lastUpdate = document.getElementById("lastUpdate");
 
-    // 🟢 Simulación de datos (puedes reemplazar con fetch a tu API)
-    const userId = 1; // Ejemplo: ID del usuario autenticado
-    const API_URL = `https://tu-servidor-api.com/api/sensores?userId=${userId}`;
+    //// URL del API (se mantiene, pero aún no se usa)
+    //const userId = localStorage.getItem("userId") || 1;
+    //const API_URL = `https://localhost:7168/Services/GetSensors/${userId}`;
 
-    // Si tuvieras un backend real, descomenta el bloque fetch 👇
-    /*
-    try {
-        const response = await fetch(API_URL);
-        if (!response.ok) throw new Error("Error al obtener sensores");
-        var sensores = await response.json();
-    } catch (error) {
-        console.error("Error cargando sensores:", error);
-        var sensores = []; // Vacío si falla
-    }
-    */
-
-    //const response = await axios.get('https://localhost:7168/Services/GetSensors/1');
-
-    // Datos simulados mientras no hay backend
+    // Datos de ejemplo estáticos (estructura igual a la del backend)
     const sensores = [
-        { id: "SEN-001", ubicacion: "Bosque El Águila", temperatura: 34.2, humedad: 45, gas: "Normal", ultimaLectura: "2025-10-16 14:32", estado: "Activo" },
-        { id: "SEN-002", ubicacion: "Zona Norte", temperatura: 38.5, humedad: 31, gas: "Alerta", ultimaLectura: "2025-10-16 14:29", estado: "En riesgo" },
-        { id: "SEN-003", ubicacion: "Sierra Verde", temperatura: 29.1, humedad: 62, gas: "Normal", ultimaLectura: "2025-10-16 14:27", estado: "Activo" }
+        {
+            Id_Sensor: 1,
+            Name: "Sensor Sierra Verde",
+            LastParameters: {
+                Id_Sensor: 1,
+                Date: "2025-10-16T14:32:00",
+                Temperature: 34.5,
+                Humidity: 55,
+                Gas_Level: 12,
+                Vibration: 0.2,
+                Earthquake_Status: false,
+                Fire_Status: false
+            },
+            LogParameters: [
+                {
+                    Id_Sensor: 1,
+                    Date: "2025-10-16T14:32:00",
+                    Temperature: 34.5,
+                    Humidity: 55,
+                    Gas_Level: 12,
+                    Vibration: 0.2,
+                    Earthquake_Status: false,
+                    Fire_Status: false
+                },
+                {
+                    Id_Sensor: 1,
+                    Date: "2025-10-16T13:30:00",
+                    Temperature: 33.8,
+                    Humidity: 56,
+                    Gas_Level: 10,
+                    Vibration: 0.1,
+                    Earthquake_Status: false,
+                    Fire_Status: false
+                },
+                {
+                    Id_Sensor: 1,
+                    Date: "2025-10-16T12:30:00",
+                    Temperature: 35.0,
+                    Humidity: 54,
+                    Gas_Level: 14,
+                    Vibration: 0.3,
+                    Earthquake_Status: false,
+                    Fire_Status: false
+                }
+            ]
+        },
+        {
+            Id_Sensor: 2,
+            Name: "Sensor Bosque del Norte",
+            LastParameters: {
+                Id_Sensor: 2,
+                Date: "2025-10-16T14:20:00",
+                Temperature: 52.3,
+                Humidity: 28,
+                Gas_Level: 68,
+                Vibration: 0.1,
+                Earthquake_Status: false,
+                Fire_Status: true
+            },
+            LogParameters: [
+                {
+                    Id_Sensor: 2,
+                    Date: "2025-10-16T14:20:00",
+                    Temperature: 52.3,
+                    Humidity: 28,
+                    Gas_Level: 68,
+                    Vibration: 0.1,
+                    Earthquake_Status: false,
+                    Fire_Status: true
+                },
+                {
+                    Id_Sensor: 2,
+                    Date: "2025-10-16T13:15:00",
+                    Temperature: 50.9,
+                    Humidity: 31,
+                    Gas_Level: 65,
+                    Vibration: 0.2,
+                    Earthquake_Status: false,
+                    Fire_Status: false
+                },
+                {
+                    Id_Sensor: 2,
+                    Date: "2025-10-16T12:10:00",
+                    Temperature: 49.7,
+                    Humidity: 33,
+                    Gas_Level: 58,
+                    Vibration: 0.1,
+                    Earthquake_Status: false,
+                    Fire_Status: false
+                }
+            ]
+        },
+        {
+            Id_Sensor: 3,
+            Name: "Sensor Valle del Sol",
+            LastParameters: {
+                Id_Sensor: 3,
+                Date: "2025-10-16T14:15:00",
+                Temperature: 26.8,
+                Humidity: 70,
+                Gas_Level: 8,
+                Vibration: 0.7,
+                Earthquake_Status: true,
+                Fire_Status: false
+            },
+            LogParameters: [
+                {
+                    Id_Sensor: 3,
+                    Date: "2025-10-16T14:15:00",
+                    Temperature: 26.8,
+                    Humidity: 70,
+                    Gas_Level: 8,
+                    Vibration: 0.7,
+                    Earthquake_Status: true,
+                    Fire_Status: false
+                },
+                {
+                    Id_Sensor: 3,
+                    Date: "2025-10-16T13:10:00",
+                    Temperature: 27.2,
+                    Humidity: 69,
+                    Gas_Level: 9,
+                    Vibration: 0.6,
+                    Earthquake_Status: false,
+                    Fire_Status: false
+                },
+                {
+                    Id_Sensor: 3,
+                    Date: "2025-10-16T12:05:00",
+                    Temperature: 26.5,
+                    Humidity: 71,
+                    Gas_Level: 8,
+                    Vibration: 0.5,
+                    Earthquake_Status: false,
+                    Fire_Status: false
+                }
+            ]
+        }
     ];
 
-    // 🧮 Actualizar resumen
+    // Actualizar resumen general
     sensorCount.textContent = sensores.length.toString();
     lastUpdate.textContent = new Date().toLocaleString();
 
-    // 🧾 Limpiar tabla antes de agregar filas
+    // Limpiar tabla antes de agregar filas
     tableBody.innerHTML = "";
 
-    if (sensores.length === 0) {
-        const emptyRow = document.createElement("tr");
-        emptyRow.innerHTML = `<td colspan="7" class="text-center text-muted py-3">No hay sensores asignados a este usuario.</td>`;
-        tableBody.appendChild(emptyRow);
-        return;
-    }
-
-    // 🧩 Renderizar sensores en la tabla
+    // Renderizar sensores
     sensores.forEach(sensor => {
-        const row = document.createElement("tr");
+        const last = sensor.LastParameters;
 
-        // Determinar color del estado
+        // Si no hay datos recientes
+        const temperatura = last?.Temperature ?? "N/A";
+        const humedad = last?.Humidity ?? "N/A";
+        const gas = last?.Gas_Level ?? "N/A";
+        const fecha = last?.Date ? new Date(last.Date).toLocaleString() : "Sin datos";
+
+        // Determinar estado (según valores de riesgo)
+        let estado = "🟢 Activo";
         let estadoClass = "text-success fw-semibold";
-        if (sensor.estado === "En riesgo") estadoClass = "text-danger fw-semibold";
-        else if (sensor.estado === "Inactivo") estadoClass = "text-secondary fw-semibold";
 
+        if (last?.Fire_Status === true || temperatura > 50 || gas > 50) {
+            estado = "🔥 Riesgo de incendio";
+            estadoClass = "text-danger fw-semibold";
+        } else if (last?.Earthquake_Status === true || last?.Vibration > 0.5) {
+            estado = "⚠️ Vibración detectada";
+            estadoClass = "text-warning fw-semibold";
+        }
+
+        // Crear fila de la tabla
+        const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${sensor.id}</td>
-            <td>${sensor.ubicacion}</td>
-            <td>${sensor.temperatura.toFixed(1)}</td>
-            <td>${sensor.humedad}%</td>
-            <td>${sensor.gas}</td>
-            <td>${sensor.ultimaLectura}</td>
-            <td class="${estadoClass}">${sensor.estado}</td>
-        `;
+        <td>${sensor.Id_Sensor}</td>
+        <td>${sensor.Name}</td>
+        <td>${temperatura}</td>
+        <td>${humedad}</td>
+        <td>${gas}</td>
+        <td>${fecha}</td>
+        <td class="${estadoClass}">${estado}</td>`;
 
+        // Agregar evento para mostrar historial al hacer clic
+        row.addEventListener("click", () => {
+            const tbody = document.getElementById("historyTableBody");
+            tbody.innerHTML = "";
+
+            const historicos = sensor.LogParameters || [];
+
+            if (historicos.length === 0) {
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-3">
+                        Sin datos históricos.
+                    </td>
+                </tr>`;
+            } else {
+                historicos.forEach(reg => {
+                    const estadoHist = reg.Fire_Status
+                        ? "🔥 Riesgo de incendio"
+                        : reg.Earthquake_Status
+                            ? "⚠️ Vibración detectada"
+                            : "✅ Normal";
+
+                    const rowHist = document.createElement("tr");
+                    rowHist.innerHTML = `
+                    <td>${new Date(reg.Date).toLocaleString()}</td>
+                    <td>${reg.Temperature}</td>
+                    <td>${reg.Humidity}</td>
+                    <td>${reg.Gas_Level}</td>
+                    <td>${reg.Vibration ?? "N/A"}</td>
+                    <td>${estadoHist}</td>
+                `;
+                    tbody.appendChild(rowHist);
+                });
+            }
+
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById("sensorHistoryModal"));
+            const title = document.getElementById("sensorHistoryLabel");
+            title.textContent = `Historial del sensor: ${sensor.Name} (${sensor.Id_Sensor})`;
+            modal.show();
+        });
+
+        // Añadir fila a la tabla principal
         tableBody.appendChild(row);
     });
 });

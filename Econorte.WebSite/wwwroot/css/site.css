@@ -29,3 +29,14 @@ body {
     .sensor-card:hover {
         transform: scale(1.02);
     }
+
+/* Aplica el cursor tipo "mano" solo a las filas del cuerpo de la tabla */
+#sensorsTable tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+    /* Pequeño efecto visual al pasar el mouse */
+    #sensorsTable tbody tr:hover {
+        background-color: #e8f5e9; /* tono verde suave */
+    }

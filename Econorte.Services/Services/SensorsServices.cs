@@ -66,6 +66,7 @@ namespace Econorte.Services.Services
                         .Where(sp => sp.fk_Sensor == sensor.Id_Sensor)
                         .OrderByDescending(sp => sp.Date)
                         .FirstOrDefault();
+
                     if (lastParameters != null)
                     {
                         sensor.LastParameters = new Parameters
@@ -80,6 +81,7 @@ namespace Econorte.Services.Services
                             Fire_Status = lastParameters.Fire_Status ?? new(),
                         };
                     }
+
                     //Obtiene todos los parámetros del sensor
                     var parameters = _db.SensorsParameters
                         .Where(sp => sp.fk_Sensor == sensor.Id_Sensor)
@@ -101,7 +103,7 @@ namespace Econorte.Services.Services
             catch (Exception)
             {
                 //En caso de error, devuelve una lista vacía
-                sensors = new List<Sensor>();
+                sensors = new();
             }
             return sensors;
         }
