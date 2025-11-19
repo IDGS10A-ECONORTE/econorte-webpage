@@ -10,18 +10,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowFrontend", policy =>
-//    {
-//        policy
-//            .WithOrigins("https://localhost:32770") // tu frontend
-//            .AllowAnyHeader()
-//            .AllowAnyMethod()
-//            .AllowCredentials(); // si usas cookies o auth
-//    });
-//});
-
 builder.Services.AddDbContext<Econorte_DevContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -45,6 +33,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Info}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

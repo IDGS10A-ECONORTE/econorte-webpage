@@ -2,58 +2,53 @@ using Microsoft.AspNetCore.Mvc;
 using Econorte.Services.Models;
 using Econorte.Services.Services;
 using Econorte.Services.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Econorte.Services.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ServicesController : ControllerBase
     {
-        private readonly ILogger<ServicesController> _logger;
         private readonly LoginServices _loginServices;
         private readonly SensorsServices _sensorsServices;
         private readonly SensorsParametersServices _sensorsParametersServices;
-        private readonly Econorte_Context _db;
 
         public ServicesController(
-            ILogger<ServicesController> logger,
             LoginServices loginServices,
             SensorsServices sensorsServices,
-            SensorsParametersServices sensorsParametersServices,
-            Econorte_Context db
+            SensorsParametersServices sensorsParametersServices
             )
         {
-            _logger = logger;
             _loginServices = loginServices;
             _sensorsServices = sensorsServices;
             _sensorsParametersServices = sensorsParametersServices;
-            _db = db;
         }
 
         //Servicios de LoginServices---------------------------------------------------------------------------------------------------------------
         //Validar las credenciales del usuario
+        [AllowAnonymous]
         [HttpPost("Login")]
         public object Login([FromBody] Credentials credentials)
         {
-            //Llama al método del servicio UserServices que actualiza los datos de un usuario existente
             var user = _loginServices.Login(credentials);
             return user;
         }
 
-        //Cerrar Sesión
-        [HttpPost("Logout")]
-        public object Logout([FromBody] Credentials credentials)
-        {
-            //Llama al método del servicio UserServices que actualiza los datos de un usuario existente
-            Response response = _loginServices.Logout(credentials);
-            return response;
-        }
-
+        [AllowAnonymous]
         [HttpPost("Register")]
         public object Register([FromBody] Users user)
         {
-            //Llama al método del servicio UserServices que actualiza los datos de un usuario existente
             Response response = _loginServices.CreateUser(user);
+            return response;
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Logout")]
+        public object Logout([FromBody] Credentials credentials)
+        {
+            Response response = _loginServices.Logout(credentials);
             return response;
         }
 

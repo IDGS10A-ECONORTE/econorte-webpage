@@ -9,17 +9,14 @@ namespace Econorte.WebSite.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly Econorte_DevContext _db;
         private readonly IWebHostEnvironment _env;
 
         public HomeController(
-            ILogger<HomeController> logger,
             Econorte_DevContext db,
             IWebHostEnvironment env
             )
         {
-            _logger = logger;
             _db = db;
             _env = env;
         }
@@ -28,6 +25,7 @@ namespace Econorte.WebSite.Controllers
         {
             return View();
         }
+
         public IActionResult Index()
         {
             return View();
@@ -58,7 +56,7 @@ namespace Econorte.WebSite.Controllers
                         Name = a.Name,
                         URL = !_env.IsDevelopment() ? a.URL_Prod : a.URL_Dev,
                         fk_Method = a.fk_Method,
-                        Param = a.fk_Method == 2 ? (config.Param != null ? config.Param : "") : "",
+                        Param = a.fk_Method == 2 ? (config.Param != null ? config.Param : string.Empty) : string.Empty,
                         BodyParams = a.fk_Method == 2 ? config.BodyParams : null,
                     })
                     .FirstOrDefault();

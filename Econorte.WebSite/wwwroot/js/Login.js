@@ -1,4 +1,6 @@
-﻿document.addEventListener("DOMContentLoaded", () => {
+﻿if (token) window.location.href = index;
+
+document.addEventListener("DOMContentLoaded", () => {
 
     let isLogin = true;
 
@@ -92,7 +94,16 @@
             const response = await axios.post(callApiAsync, config);
             const result = response.data;
 
+            // Verifica usuario válido
             if (result && result.Id_User && result.Id_User !== 0) {
+
+                // *** IMPORTANTE: guardar el token ***
+                if (result.Token) {
+                    Auth.setToken(result.Token);
+                } else {
+                    console.warn("El backend no devolvió token");
+                }
+
                 console.log("Inicio de sesión exitoso");
                 window.location.href = index;
             } else {

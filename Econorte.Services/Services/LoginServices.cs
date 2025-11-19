@@ -1,59 +1,53 @@
 ﻿using Econorte.Services.Data;
 using Econorte.Services.Models;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Econorte.Services.Services
 {
     public class LoginServices
     {
         private readonly Econorte_Context _db;
+        private readonly IConfiguration _config;
+
         public LoginServices(
-            Econorte_Context db
+            Econorte_Context db,
+            IConfiguration config
             )
         {
             _db = db;
+            _config = config;
         }
 
         //Método que valida las credenciales que manda el cliente
-        public Users Login(Credentials credentials)
+        public AuthenticatedUser Login(Credentials credentials)
         {
-            //Modelo de usuario vacío
-            Users user = new();
+            if (credentials == null)
+                return new();
 
-            //valida que el usuario sea diferente a null
-            if (credentials != null)
+            var row = _db.Users
+                .FirstOrDefault(u => u.Email == credentials.Email && u.Active);
+
+            if (row == null)
+                return new();
+
+            // Validar contraseña usando hash
+            if (!BCrypt.Net.BCrypt.Verify(credentials.Password, row.Password))
+                return new();
+
+            // Crear token
+            var token = GenerateJwt(row);
+
+            return new()
             {
-                //Busca al usuario en la base de datos
-                var row = _db.Users
-                    .Where(u => u.Email == credentials.Email && u.Active)
-                    .FirstOrDefault();
-
-                //valida que el usuario sea diferente a null
-                if (row != null)
-                {
-                    //valida que la contraseña del usuario enviado sean las mismas que del usuario encontrado
-                    if (credentials.Password == row.Password)
-                    {
-                        //Mapear Usuario
-                        user.Id_User = row.Id_User;
-                        user.Name = row.Name;
-                        user.Email = row.Email;
-                        user.Phone = row.Phone;
-                        user.fk_Role = row.fk_Role;
-                        user.Active = row.Active;
-
-                        ////Respuesta para el cliente y manejo de alertas
-                        //response.Success = true;
-
-                        //propiedad para validar que el usuario tenga sesión iniciada
-                        row.Login = true;
-                        row.LastLog = DateTime.Now;
-
-                        //guardamos los cambios en la base de datos
-                        _db.SaveChanges();
-                    }
-                }
-            }
-            return user;
+                Id_User = row.Id_User,
+                Name = row.Name,
+                Email = row.Email,
+                Role = row.fk_Role.ToString(),
+                Token = token
+            };
         }
 
         public Response Logout(Credentials credentials)
@@ -94,10 +88,6 @@ namespace Econorte.Services.Services
                     .Where(e => e.Email == user.Email)
                     .FirstOrDefault();
 
-                /*
-                 En caso de que no se encuentre un usuario
-                 se crea el objeto en la base de datos.
-                 */
                 if (row == null)
                 {
 
@@ -106,15 +96,12 @@ namespace Econorte.Services.Services
                     {
                         Name = user.Name,
                         Email = user.Email,
-                        Password = user.Password,
+                        Password = BCrypt.Net.BCrypt.HashPassword(user.Password),   // <-- Guardar hasheado
                         Phone = user.Phone,
                         fk_Role = 2,
                         Active = true,
                     };
-
-                    //Se manda esta propiedad en caso de querer utilizarla para activar una alerta Success exitosa
                     response.Success = true;
-
                     _db.Users.Add(NewUser);
                     _db.SaveChanges();
                 }
@@ -127,34 +114,58 @@ namespace Econorte.Services.Services
             return response;
         }
 
+        public string GenerateJwt(Users user)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? ""));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id_User.ToString()),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.fk_Role.ToString())
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddHours(8),
+                signingCredentials: creds
+            );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
         public void CloseSessions()
         {
-            List<Users> users = _db.Users.Where(u => u.Login).ToList();
+            var users = _db.Users.Where(u => u.Login).ToList();
 
-            if (users.Count > 0)
+            foreach (var user in users)
             {
-                foreach (var user in users)
+                if (user.LastLog != null)
                 {
-                    if (user.LastLog != null) if (CalculateDays(user.LastLog.Value) >= 10) user.Login = false;
-                        else user.Login = false;
+                    if (CalculateDays(user.LastLog.Value) >= 10)
+                        user.Login = false;
                 }
-                _db.SaveChanges();
             }
+
+            _db.SaveChanges();
         }
 
         static int CalculateDays(DateTime date)
         {
             // Fecha actual sin hora
-            DateTime fechaActual = DateTime.Now.Date;
+            DateTime currentDate = DateTime.Now.Date;
 
             // Fecha recibida sin hora
-            DateTime fechaParametro = date.Date;
+            DateTime parameterDate = date.Date;
 
             // Calcular diferencia
-            TimeSpan diferencia = fechaActual - fechaParametro;
+            TimeSpan difference = currentDate - parameterDate;
 
             // Retornar días transcurridos (puede ser negativo si la fecha es futura)
-            return diferencia.Days;
+            return difference.Days;
         }
     }
 }
