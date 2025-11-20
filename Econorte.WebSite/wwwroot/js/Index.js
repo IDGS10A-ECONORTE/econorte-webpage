@@ -3,6 +3,9 @@
     const sensorCount = document.getElementById("sensorCount");
     const lastUpdate = document.getElementById("lastUpdate");
 
+    // Mostrar datos en la vista
+    if (user) document.getElementById("userName").textContent = `Bienvenido ${user.Name}` ?? "Bienvenido";
+
     //// URL del API (se mantiene, pero aún no se usa)
     //const userId = localStorage.getItem("userId") || 1;
     //const API_URL = `https://localhost:7168/Services/GetSensors/${userId}`;

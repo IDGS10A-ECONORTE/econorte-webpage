@@ -12,6 +12,10 @@ const publicPages = [
 
 // Token almacenado
 const token = Auth.getToken();
+const user = Auth.getUserData();
+
+console.log("Token:", token);
+console.log("User Data:", user);
 
 // Función para verificar si la URL actual coincide con una pública
 const isPublicPage = publicPages.some(p => currentUrl.endsWith(p));
@@ -25,3 +29,17 @@ if (!token && !isPublicPage) {
 else if (token && currentUrl.startsWith(loginUrl)) {
     window.location.href = indexUrl;
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btnLogout = document.getElementById("btnLogout");
+
+    if (token) {
+        btnLogout.classList.remove("d-none");
+    } else {
+        btnLogout.classList.add("d-none");
+    }
+
+    btnLogout.addEventListener("click", () => {
+        if (token) Auth.logout();
+    });
+});

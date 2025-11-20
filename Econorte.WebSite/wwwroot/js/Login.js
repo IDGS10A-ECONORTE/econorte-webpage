@@ -51,7 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const allFieldsFilled =
                 registerName.value.trim().length > 0 &&
                 registerEmail.value.trim().length > 0 &&
-                registerPhone.value.trim().length > 0 &&
                 registerPassword.value.trim().length > 0 &&
                 registerConfirmPassword.value.trim().length > 0;
 
@@ -100,6 +99,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 // *** IMPORTANTE: guardar el token ***
                 if (result.Token) {
                     Auth.setToken(result.Token);
+                    Auth.setUserData(JSON.stringify({
+                        Id_User: result.Id_User,
+                        Name: result.Name,
+                        Email: result.Email,
+                        Role: result.Role
+                    }));
                 } else {
                     console.warn("El backend no devolvió token");
                 }
@@ -119,11 +124,10 @@ document.addEventListener("DOMContentLoaded", () => {
     btnRegister.addEventListener("click", async () => {
         const name = registerName.value.trim();
         const email = registerEmail.value.trim();
-        const phone = registerPhone.value.trim();
         const password = registerPassword.value.trim();
         const confirmPassword = registerConfirmPassword.value.trim();
 
-        if (!name || !email || !phone || !password || !confirmPassword) {
+        if (!name || !email || !password || !confirmPassword) {
             alert("Por favor completa todos los campos.");
             return;
         }

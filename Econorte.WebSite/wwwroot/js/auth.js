@@ -3,12 +3,25 @@
         return localStorage.getItem("token");
     },
 
+    getUserData() {
+        const data = localStorage.getItem("userData");
+        return data ? JSON.parse(data) : null;
+    },
+
     setToken(token) {
         localStorage.setItem("token", token);
     },
 
+    setUserData(userData) {
+        localStorage.setItem("userData", userData);
+    },
+
     clearToken() {
         localStorage.removeItem("token");
+    },
+
+    clearUserData() {
+        localStorage.removeItem("userData");
     },
 
     isLoggedIn() {
@@ -17,6 +30,7 @@
 
     logout() {
         this.clearToken();
-        window.location.href = login; // Ajusta la ruta
+        this.clearUserData();
+        window.location.href = login;
     },
 };
