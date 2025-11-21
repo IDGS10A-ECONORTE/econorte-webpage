@@ -1,7 +1,8 @@
-using Econorte.WebSite.Models;
 using Econorte.WebSite.Data;
+using Econorte.WebSite.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -56,7 +57,7 @@ namespace Econorte.WebSite.Controllers
                         Name = a.Name,
                         URL = !_env.IsDevelopment() ? a.URL_Prod : a.URL_Dev,
                         fk_Method = a.fk_Method,
-                        Param = a.fk_Method == 2 ? (config.Param != null ? config.Param : string.Empty) : string.Empty,
+                        Param = a.fk_Method == 1 ? config.Param : string.Empty,
                         BodyParams = a.fk_Method == 2 ? config.BodyParams : null,
                     })
                     .FirstOrDefault();
@@ -80,9 +81,15 @@ namespace Econorte.WebSite.Controllers
                 //Validar que api no sea nulo
                 if (api != null)
                 {
+                    // Configurar el cliente HTTP
                     using var client = new HttpClient();
-                    using var request = new HttpRequestMessage(GetMethod(api.fk_Method), api.Param != "" ? (api.URL + api.Param) : api.URL);
+                    using var request = new HttpRequestMessage(GetMethod(api.fk_Method), api.Param != string.Empty ? (api.URL + api.Param) : api.URL);
 
+                    // Agregar el token de autorización si está presente
+                    if (!string.IsNullOrEmpty(config.Token))
+                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", config.Token);
+
+                    // Agregar el cuerpo de la solicitud para métodos que lo requieren
                     if (api.fk_Method == 2 || 
                         api.fk_Method == 4 ||
                         api.fk_Method == 5

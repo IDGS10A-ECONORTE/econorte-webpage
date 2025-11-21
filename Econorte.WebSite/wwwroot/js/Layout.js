@@ -14,8 +14,8 @@ const publicPages = [
 const token = Auth.getToken();
 const user = Auth.getUserData();
 
-console.log("Token:", token);
-console.log("User Data:", user);
+//console.log("Token:", token);
+//console.log("User Data:", user);
 
 // Función para verificar si la URL actual coincide con una pública
 const isPublicPage = publicPages.some(p => currentUrl.endsWith(p));
