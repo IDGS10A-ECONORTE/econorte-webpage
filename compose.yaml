@@ -24,6 +24,10 @@ services:
     ports:
       - "32769:8080"
       - "32770:8081"
+    environment:
+      - ENV ASPNETCORE_URLS=http://+:8080
+      - ENV ASPNETCORE_Kestrel__Certificates__Default__Path=
+
     volumes:
       - ./Econorte.Website/:/app/Econorte.Website
     depends_on:
