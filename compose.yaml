@@ -6,16 +6,14 @@ services:
       dockerfile: Econorte.Services/Dockerfile
     ports:
       - "32771:8080"
-      - "32772:8081"
     volumes:
       - ./Econorte.Services/:/app/Econorte.Services
     environment:
-    - ASPNETCORE_URLS=http://+:8080
-    - ASPNETCORE_Kestrel__Certificates__Default__Path=
-    - ASPNETCORE_Kestrel__Certificates__Default__Password=
-      - ConnectionStrings__DefaultConnection=Server=sqlexpress,1433;Initial Catalog=Econorte_Dev;Persist Security Info=True;TrustServerCertificate=True;Encrypt=True;MultipleActiveResultSets=true;User ID=sa;Password=Password123!
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=sqlexpress,1433;Initial Catalog=Econorte_Dev;Persist Security Info=True;TrustServerCertificate=True;Encrypt=False;MultipleActiveResultSets=true;User ID=sa;Password=Password123!
     depends_on:
       - sqlexpress
+
   econorte.website:
     image: econorte.website:dev
     build:
@@ -23,13 +21,10 @@ services:
       dockerfile: Econorte.WebSite/Dockerfile
     ports:
       - "32769:8080"
-      - "32770:8081"
     environment:
-      - ENV ASPNETCORE_URLS=http://+:8080
-      - ENV ASPNETCORE_Kestrel__Certificates__Default__Path=
-
+      - ASPNETCORE_URLS=http://+:8080
     volumes:
-      - ./Econorte.Website/:/app/Econorte.Website
+      - ./Econorte.WebSite/:/app/Econorte.WebSite
     depends_on:
       - econorte.services
 
