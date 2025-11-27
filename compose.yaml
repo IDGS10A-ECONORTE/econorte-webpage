@@ -9,6 +9,13 @@ services:
       - "32772:8081"
     volumes:
       - ./Econorte.Services/:/app/Econorte.Services
+    environment:
+    - ASPNETCORE_URLS=http://+:8080
+    - ASPNETCORE_Kestrel__Certificates__Default__Path=
+    - ASPNETCORE_Kestrel__Certificates__Default__Password=
+      - ConnectionStrings__DefaultConnection=Server=sqlexpress,1433;Initial Catalog=Econorte_Dev;Persist Security Info=True;TrustServerCertificate=True;Encrypt=True;MultipleActiveResultSets=true;User ID=sa;Password=Password123!
+    depends_on:
+      - sqlexpress
   econorte.website:
     image: econorte.website:dev
     build:
@@ -21,6 +28,7 @@ services:
       - ./Econorte.Website/:/app/Econorte.Website
     depends_on:
       - econorte.services
+
   sqlexpress:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: econorte.sqlexpress
