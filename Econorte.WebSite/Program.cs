@@ -10,8 +10,17 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.PropertyNamingPolicy = null;
 });
 
-builder.Services.AddDbContext<Econorte_DevContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+
+// Write the connection string to the console for debugging purposes
+//Console.WriteLine("Connection String: " + connectionString);
+//Console.WriteLine("------------------------");
+
+// DbContext
+builder.Services.AddDbContext<Econorte_Context>(options =>
+    options.UseSqlServer(connectionString)
+);
 
 var app = builder.Build();
 

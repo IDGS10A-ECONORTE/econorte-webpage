@@ -92,14 +92,14 @@ INSERT INTO APIs VALUES
 ('Register','https://localhost:7168/Services/UpdateSensor','/Services/UpdateSensor',4);
 
 --Actualizar Endpoints para cuando esté en Prod
-UPDATE APIs SET URL_Prod = CASE
-	WHEN URL_Prod = '/Services/Login' THEN '-' 
-	WHEN URL_Prod = '/Services/Logout' THEN '-'
-	WHEN URL_Prod = '/Services/Register' THEN '-'
-	ELSE URL_Prod
-	END
-	WHERE URL_Dev IN(
-	'/Services/Login',
-	'/Services/Logout',
-    '/Services/Register'
-	);
+  UPDATE APIs SET URL_Prod = CASE
+  WHEN URL_Dev LIKE 'https://localhost:7168/Services/Login' THEN 'https://econorteservicesv1-dya3g3ggg6cudqhp.canadaeast-01.azurewebsites.net/Services/Login'
+  WHEN URL_Dev LIKE 'https://localhost:7168/Services/Logout' THEN 'https://econorteservicesv1-dya3g3ggg6cudqhp.canadaeast-01.azurewebsites.net/Services/Logout'
+  WHEN URL_Dev LIKE 'https://localhost:7168/Services/Register' THEN 'https://econorteservicesv1-dya3g3ggg6cudqhp.canadaeast-01.azurewebsites.net/Services/Register'
+  WHEN URL_Dev LIKE 'https://localhost:7168/Services/CloseSessions' THEN 'https://econorteservicesv1-dya3g3ggg6cudqhp.canadaeast-01.azurewebsites.net/Services/CloseSessions'
+  WHEN URL_Dev LIKE 'https://localhost:7168/Services/RegisterSensor' THEN 'https://econorteservicesv1-dya3g3ggg6cudqhp.canadaeast-01.azurewebsites.net/Services/RegisterSensor'
+  WHEN URL_Dev LIKE 'https://localhost:7168/Services/GetSensors/' THEN 'https://econorteservicesv1-dya3g3ggg6cudqhp.canadaeast-01.azurewebsites.net/Services/GetSensors/'
+  WHEN URL_Dev LIKE 'https://localhost:7168/Services/DeleteSensor/' THEN 'https://econorteservicesv1-dya3g3ggg6cudqhp.canadaeast-01.azurewebsites.net/Services/DeleteSensor/'
+  WHEN URL_Dev LIKE 'https://localhost:7168/Services/UpdateSensor' THEN 'https://econorteservicesv1-dya3g3ggg6cudqhp.canadaeast-01.azurewebsites.net/Services/UpdateSensor'
+  ELSE URL_Prod END
+	WHERE Id_API IN(1,2,3,4,5,6,7,8);

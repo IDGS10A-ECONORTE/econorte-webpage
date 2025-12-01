@@ -17,9 +17,12 @@ builder.Services.AddScoped<LoginServices>();
 builder.Services.AddScoped<SensorsServices>();
 builder.Services.AddScoped<SensorsParametersServices>();
 
+// Connection String
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+
 // DbContext
 builder.Services.AddDbContext<Econorte_Context>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+    options.UseSqlServer(connectionString)
 );
 
 //  JWT Authentication
@@ -80,18 +83,37 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("https://econorte-e0akgzh0d9ebh4fy.canadacentral-01.azurewebsites.net")
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .AllowCredentials();
+    });
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseSwagger();
+
 if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
     app.UseSwaggerUI();
+else
+{
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "Econorte Services API V1");
+        options.RoutePrefix = string.Empty;
+    });
 }
 
 app.UseHttpsRedirection();
 
-// Orden correcto: primero autenticación, luego autorización
+// CORS FIRST!
+app.UseCors("AllowFrontend");
+
 app.UseAuthentication();
 app.UseAuthorization();
 

@@ -125,6 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const name = registerName.value.trim();
         const email = registerEmail.value.trim();
         const password = registerPassword.value.trim();
+        const phone = registerPhone.value.trim() || null;
         const confirmPassword = registerConfirmPassword.value.trim();
 
         if (!name || !email || !password || !confirmPassword) {

@@ -10,11 +10,11 @@ namespace Econorte.WebSite.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly Econorte_DevContext _db;
+        private readonly Econorte_Context _db;
         private readonly IWebHostEnvironment _env;
 
         public HomeController(
-            Econorte_DevContext db,
+            Econorte_Context db,
             IWebHostEnvironment env
             )
         {
@@ -55,7 +55,7 @@ namespace Econorte.WebSite.Controllers
                     {
                         Id_API = a.Id_API,
                         Name = a.Name,
-                        URL = !_env.IsDevelopment() ? a.URL_Prod : a.URL_Dev,
+                        URL = a.URL_Prod,
                         fk_Method = a.fk_Method,
                         Param = a.fk_Method == 1 ? config.Param : string.Empty,
                         BodyParams = a.fk_Method == 2 ? config.BodyParams : null,
