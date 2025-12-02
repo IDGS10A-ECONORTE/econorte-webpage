@@ -1,7 +1,7 @@
 {
   "name": "Econorte IOT Services",
   "short_name": "Econorte",
-  "start_url": "https://econorte-e0akgzh0d9ebh4fy.canadacentral-01.azurewebsites.net/",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2196f3",
